@@ -1,0 +1,31 @@
+﻿@model List<WebMVC.Employee>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Employee @Html.ActionLink("新增員工","New",null, new { @class = "btn btn-default" })</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>編輯</th>
+            <th>刪除</th>
+            <th>員工ID</th>
+            <th>員工FirstName</th>
+            <th>員工LastName</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var emp in Model) {
+        <tr>
+            <th>@Html.ActionLink("編輯", "Modify", new { id = emp.EmployeeID }, new { @class = "btn btn-default" })</th>
+            <th>@Html.ActionLink("刪除", "Delete", new { id = emp.EmployeeID }, new { @class = "btn btn-default" })</th>
+            <th>@emp.EmployeeID</th>
+            <th>@emp.FirstName</th>
+            <th>@emp.LastName</th>
+        </tr>
+        }
+    </tbody>
+</table>
+

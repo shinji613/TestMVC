@@ -1,0 +1,27 @@
+﻿@model List<WebMVC.SheetSet>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Sheet</h2>
+
+<table class="table" >
+    <thead>
+        <tr>
+            <th>表單單號</th>
+            <th>表單名稱</th>
+            <th>表單員工</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var sheet in Model) {
+            <tr>
+                <th>@sheet.Id</th>
+                <th>@sheet.Name</th>
+                <th>@sheet.Employee</th>
+            </tr>
+        }
+    </tbody>
+</table>
+
