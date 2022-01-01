@@ -10,11 +10,13 @@ namespace WebMVC.Models
     {
         // GET: Employee
         public ActionResult Index(string id = null) {
+            ViewBag.ResultMsg = TempData["ResultMsg"] != null ? TempData["ResultMsg"] : "";
+
             using (NorthwindEntities nw = new NorthwindEntities()) {
                 List<Employee> listEmps = (from emp in nw.Employees select emp).ToList();
 
                 return View(listEmps);
-            }
+            }           
         }
 
         public ActionResult New() {
@@ -29,12 +31,13 @@ namespace WebMVC.Models
                     nw.SaveChanges();
                 }
 
-                return RedirectToAction("Index");
+                TempData["ResultMsg"] = string.Format("新增員工成功");
+
             } catch (Exception ex) {
-                Response.Write("新增員工失敗，失敗原因：" + ex.Message);
+                TempData["ResultMsg"] = string.Format("新增員工失敗，失敗原因：{0}", ex.Message);
             }
 
-            return View();
+            return RedirectToAction("Index");
         }
 
         public ActionResult Modify(int? id) {
@@ -57,12 +60,12 @@ namespace WebMVC.Models
                     nw.SaveChanges();
                 }
 
-                return RedirectToAction("Index");
+                TempData["ResultMsg"] = string.Format("編輯員工【{0}】成功", postback.EmployeeID);
             } catch (Exception ex) {
-                Response.Write("編輯員工失敗，失敗原因：" + ex.Message);
+                TempData["ResultMsg"] = string.Format("編輯員工【{0}】失敗，失敗原因：{1}", postback.EmployeeID, ex.Message);
             }
 
-            return View();
+            return RedirectToAction("Index");
         }
 
         public ActionResult Delete(int? id) {
@@ -74,22 +77,43 @@ namespace WebMVC.Models
         }
 
         [HttpPost]
-        public ActionResult Delete(Employee postback) {
+        public ActionResult Delete(int empID) {
             try {
 
                 using (NorthwindEntities nw = new NorthwindEntities()) {
-                    Employee employee = (from emp in nw.Employees where emp.EmployeeID == postback.EmployeeID select emp).FirstOrDefault();
+                    Employee employee = (from emp in nw.Employees where emp.EmployeeID == empID select emp).FirstOrDefault();
 
                     nw.Employees.Remove(employee);
                     nw.SaveChanges();
                 }
 
-                return RedirectToAction("Index");
+                TempData["ResultMsg"] = string.Format("刪除員工【{0}】成功", empID);
+
             } catch (Exception ex) {
-                Response.Write("刪除員工失敗，失敗原因：" + ex.Message);
+                TempData["ResultMsg"] = string.Format("刪除員工【{0}】失敗，失敗原因：{1}", empID, ex.Message);
             }
 
-            return View();
+            return RedirectToAction("Index");
         }
+
+        //[HttpPost]
+        //public ActionResult Delete(Employee postback) {
+        //    try {
+
+        //        using (NorthwindEntities nw = new NorthwindEntities()) {
+        //            Employee employee = (from emp in nw.Employees where emp.EmployeeID == postback.EmployeeID select emp).FirstOrDefault();
+
+        //            nw.Employees.Remove(employee);
+        //            nw.SaveChanges();
+        //        }
+
+        //        TempData["ResultMsg"] = string.Format("刪除員工成功");
+
+        //    } catch (Exception ex) {
+        //        TempData["ResultMsg"] = string.Format("刪除員工失敗，失敗原因：{0}", ex.Message);
+        //    }
+
+        //    return RedirectToAction("Index");
+        //}
     }
 }

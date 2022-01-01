@@ -2,9 +2,10 @@
 
 @{
     ViewBag.Title = "Index";
+    @Html.Label("info", (string)ViewBag.ResultMsg, new { @class = "text-info" })
 }
 
-<h2>Employee @Html.ActionLink("新增員工","New",null, new { @class = "btn btn-default" })</h2>
+<h2>Employee @Html.ActionLink("新增員工", "New", null, new { @class = "btn btn-default" })</h2>
 
 <table class="table">
     <thead>
@@ -20,7 +21,13 @@
         @foreach (var emp in Model) {
         <tr>
             <th>@Html.ActionLink("編輯", "Modify", new { id = emp.EmployeeID }, new { @class = "btn btn-default" })</th>
-            <th>@Html.ActionLink("刪除", "Delete", new { id = emp.EmployeeID }, new { @class = "btn btn-default" })</th>
+            @*<th>@Html.ActionLink("刪除", "Delete", new { id = emp.EmployeeID }, new { @class = "btn btn-default" })</th>*@
+            <th>
+                @using (Html.BeginForm("Delete", "Employee", FormMethod.Post, new { @class = "Delete" })) {
+                    @Html.Hidden("empID", emp.EmployeeID)
+                    <input type="submit" value="刪除" class="btn btn-default" />
+                }
+            </th>
             <th>@emp.EmployeeID</th>
             <th>@emp.FirstName</th>
             <th>@emp.LastName</th>
