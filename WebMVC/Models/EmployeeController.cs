@@ -6,7 +6,8 @@ using System.Web.Mvc;
 
 namespace WebMVC.Models
 {
-    public class EmployeeController : Controller
+    public class 
+        EmployeeController : Controller
     {
         // GET: Employee
         public ActionResult Index(string id = null) {
@@ -24,7 +25,15 @@ namespace WebMVC.Models
         }
 
         [HttpPost]
-        public ActionResult New(Employee postback) {
+        public ActionResult New(Employee postback) {           
+            if (!this.ModelState.IsValid) {
+                TempData["ResultMsg"] = string.Format("新增員工失敗，請檢查資料是否正確輸入");
+
+                ViewBag.ResultMsg = TempData["ResultMsg"];
+
+                return View(postback);
+            }
+
             try {
                 using (NorthwindEntities nw = new NorthwindEntities()) {
                     nw.Employees.Add(postback);
