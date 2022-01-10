@@ -3,21 +3,37 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using WebAPI.Models;
 
 namespace WebMVC.Models
 {
     public class 
         EmployeeController : Controller
     {
+        private static APIClient api = new APIClient();
+
         // GET: Employee
         public ActionResult Index(string id = null) {
             ViewBag.ResultMsg = TempData["ResultMsg"] != null ? TempData["ResultMsg"] : "";
 
-            using (NorthwindEntities nw = new NorthwindEntities()) {
-                List<Employee> listEmps = (from emp in nw.Employees select emp).ToList();
+            //using (NorthwindEntities nw = new NorthwindEntities()) {
+            //    List<Employee> listEmps = (from emp in nw.Employees select emp).ToList();
 
-                return View(listEmps);
-            }           
+            //    return View(listEmps);
+            //}     
+
+            List<Employee> listEmps = new List<Employee>();
+
+
+            foreach(var emp in api.ListAllEmployees()) {
+                listEmps.Add(new Employee() {
+                    EmployeeID = emp.EmployeeID,
+                    FirstName = emp.FirstName,
+                    LastName = emp.LastName
+                });
+            }
+
+            return View(listEmps);
         }
 
         public ActionResult New() {
